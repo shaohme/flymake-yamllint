@@ -5,7 +5,7 @@
 ;; Author: Martin Kjær Jørgensen
 ;; Created: 26 November 2021
 ;; Version: 0.0.1
-;; Package-Requires: ((emacs "24.1"))
+;; Package-Requires: ((emacs "26.1"))
 ;; URL: https://localhost
 ;;; Commentary:
 
@@ -13,7 +13,7 @@
 ;; Make sure 'yamllint' binary is on your path.
 ;; Installation instructions https://github.com/adrienverge/yamllint#installation
 
-;; We expect `yamllint' to product stdout like:
+;; flymake-yamllint expect `yamllint' to produce stdout like:
 ;; test.yml:2:4: [error] wrong indentation: expected 2 but found 3 (indentation)
 
 ;; Example above should be matched by regex used in code like this:
