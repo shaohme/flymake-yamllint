@@ -1,12 +1,12 @@
 ;;; flymake-yamllint.el --- YAML linter with yamllint  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021 Martin Kjær Jørgensen < mkj at gotu.dk >
+;; Copyright (C) 2021 Martin Kjær Jørgensen (shaohme) <mkj@gotu.dk>
 ;;
-;; Author: Martin Kjær Jørgensen
+;; Author: Martin Kjær Jørgensen <mkj@gotu.dk>
 ;; Created: 26 November 2021
-;; Version: 0.0.1
-;; Package-Requires: ((emacs "26.1"))
-;; URL: https://localhost
+;; Version: 0.1
+;; Package-Requires: ((emacs "26"))
+;; URL: https://github.com/shaohme/flymake-yamllint
 ;;; Commentary:
 
 ;; This package adds YAML syntax checker yamllint.
