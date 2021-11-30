@@ -5,7 +5,7 @@
 ;; Author: Martin Kjær Jørgensen <mkj@gotu.dk>
 ;; Created: 26 November 2021
 ;; Version: 0.1
-;; Package-Requires: ((emacs "26"))
+;; Package-Requires: ((emacs "26.1"))
 ;; URL: https://github.com/shaohme/flymake-yamllint
 ;;; Commentary:
 
