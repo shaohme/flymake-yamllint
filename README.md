@@ -2,7 +2,7 @@
 A Flymake backend for validating YAML files for Emacs (26+), using [yamllint](https://github.com/adrienverge/yamllint)
 
 ## Installation
-For now `flymake-yamllint` is not on MELPA so you will have to add it to your `load-path` manually.
+`flymake-yamllint` is available on MELPA so you can add it using your preferred Emacs package manager or manually to your `load-path`.
 
 ## Usage
 Add the following to your `.emacs` files for Emacs to load the backend when visiting a YAML file
