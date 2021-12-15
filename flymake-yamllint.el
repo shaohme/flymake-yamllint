@@ -80,10 +80,10 @@
                 (if (with-current-buffer source (eq proc flymake-yamllint--proc))
                     (with-current-buffer (process-buffer proc)
                       (goto-char (point-min))
-                      (let ((diags)
-                            (error-type (match-string 3)))
+                      (let ((diags))
                         (while (search-forward-regexp "^.+?:\\([0-9]+\\):\\([0-9]+\\): \\(\\[.*\\]\\) \\(.*\\)$" nil t)
-                          (let ((region (flymake-diag-region source (string-to-number (match-string 1)) (string-to-number (match-string 2)))))
+                          (let ((region (flymake-diag-region source (string-to-number (match-string 1)) (string-to-number (match-string 2))))
+                                (error-type (match-string 3)))
                             ;; expect `region' to only have 2 values (start . end)
                             (push (flymake-make-diagnostic source
                                                            (car region)
