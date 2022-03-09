@@ -4,7 +4,7 @@
 ;;
 ;; Author: Martin Kjær Jørgensen <mkj@gotu.dk>
 ;; Created: 26 November 2021
-;; Version: 0.1.1
+;; Version: 0.1.2
 ;; Package-Requires: ((emacs "26.1"))
 ;; URL: https://github.com/shaohme/flymake-yamllint
 ;;; Commentary:
@@ -47,57 +47,57 @@
   :prefix "flymake-yamllint-"
   :group 'tools)
 
-(defcustom flymake-yamllint-path
-  (executable-find "yamllint")
-  "The path to the `yamllint' executable."
+(defcustom flymake-yamllint-program
+  "yamllint"
+  "Name of `yamllint' executable."
   :type 'string)
 
 (defvar-local flymake-yamllint--proc nil)
 
 (defun flymake-yamllint (report-fn &rest _args)
   "Flymake backend for yamllint report using REPORT-FN."
-  (unless (and flymake-yamllint-path
-               (file-executable-p flymake-yamllint-path))
-    (error "Could not find yamllint executable"))
-
-  (when (process-live-p flymake-yamllint--proc)
-    (kill-process flymake-yamllint--proc)
-    (setq flymake-yamllint--proc nil))
-
-  (let ((source (current-buffer)))
-    (save-restriction
-      (widen)
-      (setq
-       flymake-yamllint--proc
-       (make-process
-        :name "flymake-yamllint" :noquery t :connection-type 'pipe
-        :buffer (generate-new-buffer " *flymake-yamllint*")
-        :command (list flymake-yamllint-path "-" "-f" "parsable")
-        :sentinel
-        (lambda (proc _event)
-          (when (eq 'exit (process-status proc))
-            (unwind-protect
-                (if (with-current-buffer source (eq proc flymake-yamllint--proc))
-                    (with-current-buffer (process-buffer proc)
-                      (goto-char (point-min))
-                      (let ((diags))
-                        (while (search-forward-regexp "^.+?:\\([0-9]+\\):\\([0-9]+\\): \\(\\[.*\\]\\) \\(.*\\)$" nil t)
-                          (let ((region (flymake-diag-region source (string-to-number (match-string 1)) (string-to-number (match-string 2))))
-                                (error-type (match-string 3)))
-                            ;; expect `region' to only have 2 values (start . end)
-                            (push (flymake-make-diagnostic source
-                                                           (car region)
-                                                           (cdr region)
-                                                           (cond ((equal error-type "[error]") :error)
-                                                                 ((equal error-type "[warning]") :warning)
-                                                                 ((equal error-type "[info]") :info))
-                                                           (match-string 4)) diags)))
-                        (funcall report-fn (reverse diags))))
-                  (flymake-log :warning "Canceling obsolete check %s"
-                               proc))
-              (kill-buffer (process-buffer proc)))))))
-      (process-send-region flymake-yamllint--proc (point-min) (point-max))
-      (process-send-eof flymake-yamllint--proc))))
+  (if (not flymake-yamllint-program)
+      (error "No yamllint program name set"))
+  (let ((flymake-yamllint--executable-path (executable-find flymake-yamllint-program)))
+    (if (not (file-executable-p flymake-yamllint--executable-path))
+        (error "Could not find yamllint executable"))
+    (when (process-live-p flymake-yamllint--proc)
+      (kill-process flymake-yamllint--proc)
+      (setq flymake-yamllint--proc nil))
+    (let ((source (current-buffer)))
+      (save-restriction
+        (widen)
+        (setq
+         flymake-yamllint--proc
+         (make-process
+          :name "flymake-yamllint" :noquery t :connection-type 'pipe
+          :buffer (generate-new-buffer " *flymake-yamllint*")
+          :command (list flymake-yamllint--executable-path "-" "-f" "parsable")
+          :sentinel
+          (lambda (proc _event)
+            (when (eq 'exit (process-status proc))
+              (unwind-protect
+                  (if (with-current-buffer source (eq proc flymake-yamllint--proc))
+                      (with-current-buffer (process-buffer proc)
+                        (goto-char (point-min))
+                        (let ((diags))
+                          (while (search-forward-regexp "^.+?:\\([0-9]+\\):\\([0-9]+\\): \\(\\[.*\\]\\) \\(.*\\)$" nil t)
+                            (let ((region (flymake-diag-region source (string-to-number (match-string 1)) (string-to-number (match-string 2))))
+                                  (error-type (match-string 3)))
+                              ;; expect `region' to only have 2 values (start . end)
+                              (push (flymake-make-diagnostic source
+                                                             (car region)
+                                                             (cdr region)
+                                                             (cond ((equal error-type "[error]") :error)
+                                                                   ((equal error-type "[warning]") :warning)
+                                                                   ((equal error-type "[info]") :info))
+                                                             (match-string 4)) diags)))
+                          (funcall report-fn (reverse diags))))
+                    (flymake-log :warning "Canceling obsolete check %s"
+                                 proc))
+                (kill-buffer (process-buffer proc)))))))
+        (process-send-region flymake-yamllint--proc (point-min) (point-max))
+        (process-send-eof flymake-yamllint--proc)))))
 
 ;;;###autoload
 (defun flymake-yamllint-setup ()
