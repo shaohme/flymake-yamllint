@@ -4,7 +4,7 @@
 ;;
 ;; Author: Martin Kjær Jørgensen <mkj@gotu.dk>
 ;; Created: 26 November 2021
-;; Version: 0.1.2
+;; Version: 0.1.4
 ;; Package-Requires: ((emacs "26.1"))
 ;; URL: https://github.com/shaohme/flymake-yamllint
 ;;; Commentary:
@@ -91,7 +91,7 @@
                                                              (cdr region)
                                                              (cond ((equal error-type "[error]") :error)
                                                                    ((equal error-type "[warning]") :warning)
-                                                                   ((equal error-type "[info]") :info))
+                                                                   ((equal error-type "[info]") :note))
                                                              (match-string 4)) diags)))
                           (funcall report-fn (reverse diags))))
                     (flymake-log :warning "Canceling obsolete check %s"
