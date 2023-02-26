@@ -52,6 +52,11 @@
   "Name of `yamllint' executable."
   :type 'string)
 
+(defcustom flymake-yamllint-arguments
+  nil
+  "A list of strings to pass to the yamllint program as arguments."
+  :type '(repeat (string :tag "Argument")))
+
 (defvar-local flymake-yamllint--proc nil)
 
 (defun flymake-yamllint (report-fn &rest _args)
@@ -73,7 +78,7 @@
          (make-process
           :name "flymake-yamllint" :noquery t :connection-type 'pipe
           :buffer (generate-new-buffer " *flymake-yamllint*")
-          :command (list flymake-yamllint--executable-path "-" "-f" "parsable")
+          :command `(,flymake-yamllint--executable-path ,@flymake-yamllint-arguments "-f" "parsable" "-")
           :sentinel
           (lambda (proc _event)
             (when (eq 'exit (process-status proc))
