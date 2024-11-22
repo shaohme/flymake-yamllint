@@ -1,4 +1,8 @@
 # flymake-yamllint
+
+> [!IMPORTANT]
+> Project has moved to [Codeberg](https://codeberg.org/shaohme/flymake-yamllint)
+
 A Flymake backend for validating YAML files for Emacs (26+), using
 [yamllint](https://github.com/adrienverge/yamllint)
 
